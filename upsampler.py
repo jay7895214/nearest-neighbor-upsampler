@@ -54,6 +54,7 @@ class NearestNeighborUpsamplingApp:
 
         self.width_entry = tk.Entry(self.control_frame, textvariable=self.width_var)
         self.width_entry.grid(row=1, column=3, padx=5, pady=10)
+        self.width_entry.bind("<Return>", lambda event: self.process_image())
         self.width_var.trace_add('write', lambda *args: self.update_dimensions_by_width())
 
         self.height_label = tk.Label(self.control_frame, text="Height:")
@@ -61,6 +62,7 @@ class NearestNeighborUpsamplingApp:
 
         self.height_entry = tk.Entry(self.control_frame, textvariable=self.height_var)
         self.height_entry.grid(row=1, column=5, padx=5, pady=10)
+        self.height_entry.bind("<Return>", lambda event: self.process_image())
         self.height_var.trace_add('write', lambda *args: self.update_dimensions_by_height())
 
         # Canvas background color selection
@@ -95,7 +97,7 @@ class NearestNeighborUpsamplingApp:
             self.width_var.set(str(self.input_image.width))
             self.height_var.set(str(self.input_image.height))
 
-    def process_image(self):
+    def process_image(self, event=None):
         if self.input_image:
             try:
                 # Get user input scale factor
