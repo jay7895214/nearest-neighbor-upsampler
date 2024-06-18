@@ -46,7 +46,7 @@ class NearestNeighborUpsamplingApp:
         self.scale_entry.grid(row=1, column=1, padx=5, pady=10)
         self.scale_entry.bind("<Up>", self.increment_scale)
         self.scale_entry.bind("<Down>", self.decrement_scale)
-        self.scale_entry.bind("<Return>", lambda event: self.process_image())
+        self.scale_entry.bind("<Return>", lambda event: self.update_dimensions_by_scale())
 
         # Width and height input fields (editable)
         self.width_label = tk.Label(self.control_frame, text="Width:")
@@ -54,16 +54,14 @@ class NearestNeighborUpsamplingApp:
 
         self.width_entry = tk.Entry(self.control_frame, textvariable=self.width_var)
         self.width_entry.grid(row=1, column=3, padx=5, pady=10)
-        self.width_entry.bind("<Return>", lambda event: self.process_image())
-        self.width_var.trace_add('write', lambda *args: self.update_dimensions_by_width())
+        self.width_entry.bind("<Return>", lambda event: self.update_dimensions_by_width())
 
         self.height_label = tk.Label(self.control_frame, text="Height:")
         self.height_label.grid(row=1, column=4, padx=5, pady=10)
 
         self.height_entry = tk.Entry(self.control_frame, textvariable=self.height_var)
         self.height_entry.grid(row=1, column=5, padx=5, pady=10)
-        self.height_entry.bind("<Return>", lambda event: self.process_image())
-        self.height_var.trace_add('write', lambda *args: self.update_dimensions_by_height())
+        self.height_entry.bind("<Return>", lambda event: self.update_dimensions_by_height())
 
         # Canvas background color selection
         self.bg_color_label = tk.Label(self.control_frame, text="Canvas BG Color:")
@@ -191,10 +189,11 @@ class NearestNeighborUpsamplingApp:
                 new_height = int(self.input_image.height * scale_factor)
                 self.width_var.set(str(new_width))
                 self.height_var.set(str(new_height))
+                self.process_image()
             except ValueError:
                 pass
 
-    def update_dimensions_by_width(self, *args):
+    def update_dimensions_by_width(self, event=None):
         if self.input_image:
             try:
                 new_width = float(self.width_var.get())
@@ -203,10 +202,11 @@ class NearestNeighborUpsamplingApp:
                     new_height = int(self.input_image.height * scale_factor)
                     self.scale_factor.set(scale_factor)
                     self.height_var.set(str(new_height))
+                    self.process_image()
             except ValueError:
                 pass
 
-    def update_dimensions_by_height(self, *args):
+    def update_dimensions_by_height(self, event=None):
         if self.input_image:
             try:
                 new_height = float(self.height_var.get())
@@ -215,6 +215,7 @@ class NearestNeighborUpsamplingApp:
                     new_width = int(self.input_image.width * scale_factor)
                     self.scale_factor.set(scale_factor)
                     self.width_var.set(str(new_width))
+                    self.process_image()
             except ValueError:
                 pass
 
